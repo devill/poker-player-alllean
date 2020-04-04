@@ -29,12 +29,17 @@ class Player
 
   def chen_score(my_cards)
     score = my_cards.map { |card| card_score card }.max
-    score *= 2 if pair?(my_cards)
+    score *= 2 if pocket_pair? my_cards
+    score += 2 if suited_pocket? my_cards
     score
   end
 
-  def pair?(my_cards)
+  def pocket_pair?(my_cards)
     my_cards[0]['rank'] == my_cards[1]['rank']
+  end
+
+  def suited_pocket?(my_cards)
+    my_cards[0]['suit'] == my_cards[1]['suit']
   end
 
   def card_score(card)

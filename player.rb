@@ -6,8 +6,8 @@ class Player
   VERSION = "Scoring scoring scoring"
 
   def bet_request(game_state)
-    safe_bet(game_state)
-  rescue StandardError => e
+  #  safe_bet(game_state)
+  #rescue StandardError => e
     0
   end
 

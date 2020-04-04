@@ -28,11 +28,20 @@ class Player
   end
 
   def chen_score(my_cards)
-    score = my_cards.map { |card| card_score card }.max
+    score = max_card_value(my_cards)
     score *= 2 if pocket_pair? my_cards
     score += 2 if suited_pocket? my_cards
     score += pocket_gap_score my_cards
+    score += 1 if max_card_numeric_value my_cards < 12 and pocket_gap my_cards < 2
     score.ceil
+  end
+
+  def max_card_value(my_cards)
+    my_cards.map { |card| card_score card }.max
+  end
+
+  def max_card_numeric_value(my_cards)
+    my_cards.map { |card| card_numeric_value card }.max
   end
 
   def pocket_pair?(my_cards)

@@ -28,7 +28,10 @@ class Player
     cutoff = active_players > 2 ? 10 : 7
 
     position = [2,3,1][game_state['dealer']]
-    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards']) * 3 + flush_score(my_cards, game_state['community_cards'])
+    chen_score = chen_score(my_cards) +
+        ivett_score(my_cards, game_state['community_cards']) * 3 +
+        flush_score(my_cards, game_state['community_cards']) +
+        straight_score(my_cards, game_state['community_cards'])
 
     call = game_state['current_buy_in'].to_i - me['bet'].to_i
     min_raise = game_state['minimum_raise'].to_i
@@ -39,6 +42,29 @@ class Player
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 
     bet
+  end
+
+  def straight_score(my_cards, community_cards)
+    ordered_card_value = (my_cards + community_cards).map { |card| card_numeric_value(card) }.sort
+
+    max_streak = 0
+    current_streak = 0
+    last_card_value = -10
+    ordered_card_value.each do |value|
+      if last_card_value == value
+      elsif last_card_value + 1 == value
+        current_streak += 1
+      else
+        max_streak = [current_streak, max_streak].max
+        current_streak = 0
+      end
+    end
+    community_count = community_cards.length
+
+    return 10 if max_streak == 5
+    return 3 if max_streak > 4 and community_count < 4
+    return 1 if max_streak > 4 and community_count < 5
+    0
   end
 
   def flush_score(my_cards, community_cards)

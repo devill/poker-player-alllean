@@ -9,9 +9,7 @@ class Player
     safe_bet(game_state)
   rescue StandardError => e
     puts e.message
-    e.backtrace.inspect.each do |line|
-      puts line
-    end
+    puts e.backtrace.inspect
   end
 
   def showdown(game_state)

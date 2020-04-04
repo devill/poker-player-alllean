@@ -23,8 +23,9 @@ class Player
     me = game_state['players'][game_state['in_action']]
     my_cards = me['hole_cards']
 
-    active_players = game_state['players'].map { |player| player['status'] == 'active' ? 1 : 0 }.sum
-    cutoff = active_players > 2 ? 10 : 7
+    #active_players = game_state['players'].map { |player| player['status'] == 'active' ? 1 : 0 }.sum
+    #cutoff = active_players > 2 ? 10 : 7
+    cutoff = 7
 
     position = [2,3,1][game_state['dealer']]
     chen_score = chen_score my_cards

@@ -10,6 +10,7 @@ class Player
   rescue StandardError => e
     puts e.message
     puts e.backtrace.inspect
+    0
   end
 
   def showdown(game_state)

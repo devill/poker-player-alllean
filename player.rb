@@ -20,7 +20,9 @@ class Player
   def safe_bet(game_state)
     me = game_state['players'][game_state['in_action']]
     my_cards = me['hole_cards']
-    if chen_score my_cards > 5
+
+    position = [2,3,1][game_state['dealer']]
+    if chen_score my_cards > 7 - position
       10000
     else
       0

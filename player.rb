@@ -72,7 +72,7 @@ class Player
     if values.key? card['rank']
       return values[card['rank']]
     end
-    card['rank']/2
+    card['rank'].to_i/2
   end
 
   def card_numeric_value(card)
@@ -80,6 +80,6 @@ class Player
     if values.key? card['rank']
       return values[card['rank']]
     end
-    card['rank']
+    card['rank'].to_i
   end
 end

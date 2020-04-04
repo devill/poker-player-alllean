@@ -25,7 +25,7 @@ class Player
 
     position = [2,3,1][game_state['dealer']]
     chen_score = chen_score my_cards
-    bet = (chen_score > 7 - position) ? 10000 : 0
+    bet = (chen_score > 8 - position) ? 10000 : 0
 
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 

@@ -22,11 +22,12 @@ class Player
     my_cards = me['hole_cards']
 
     position = [2,3,1][game_state['dealer']]
-    if chen_score my_cards > 7 - position
-      10000
-    else
-      0
-    end
+    chen_score = chen_score my_cards
+    bet = (chen_score > 7 - position) ? 10000 : 0
+
+    puts chen_score, bet, my_cards
+
+    bet
   end
 
   def chen_score(my_cards)

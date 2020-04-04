@@ -8,8 +8,6 @@ class Player
   def bet_request(game_state)
     safe_bet(game_state)
   rescue StandardError => e
-    puts e.message
-    puts e.backtrace.inspect
     0
   end
 

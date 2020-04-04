@@ -3,7 +3,7 @@ require 'securerandom'
 
 class Player
 
-  VERSION = "Scoring scoring scoring"
+  VERSION = "Wait for it..."
 
   def bet_request(game_state)
     safe_bet(game_state)
@@ -23,9 +23,12 @@ class Player
     me = game_state['players'][game_state['in_action']]
     my_cards = me['hole_cards']
 
+    active_players = game_state['players'].map { |player| player['status'] == 'active' ? 1 : 0 }.sum
+    cutoff = active_players > 2 ? 10 : 7
+
     position = [2,3,1][game_state['dealer']]
     chen_score = chen_score my_cards
-    bet = (chen_score > 8 - position) ? 10000 : 0
+    bet = (chen_score > cutoff - position) ? 10000 : 0
 
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 

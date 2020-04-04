@@ -6,8 +6,10 @@ class Player
   VERSION = "Scoring scoring scoring"
 
   def bet_request(game_state)
-  #  safe_bet(game_state)
-  #rescue StandardError => e
+    safe_bet(game_state)
+  rescue StandardError => e
+    puts e.message
+    puts e.backtrace
     0
   end
 
@@ -35,7 +37,7 @@ class Player
     score *= 2 if pocket_pair? my_cards
     score += 2 if suited_pocket? my_cards
     score += pocket_gap_score my_cards
-    score += 1 if max_card_numeric_value my_cards < 12 and pocket_gap my_cards < 2
+    score += 1 if max_card_numeric_value(my_cards) < 12 and pocket_gap(my_cards) < 2
     score.ceil
   end
 

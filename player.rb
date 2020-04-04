@@ -31,6 +31,7 @@ class Player
     score = my_cards.map { |card| card_score card }.max
     score *= 2 if pocket_pair? my_cards
     score += 2 if suited_pocket? my_cards
+    score += pocket_gap_score my_cards
     score
   end
 
@@ -42,11 +43,29 @@ class Player
     my_cards[0]['suit'] == my_cards[1]['suit']
   end
 
+  def pocket_gap(my_cards)
+    (card_numeric_value(my_cards[0]) - card_numeric_value(my_cards[1])).abs
+  end
+
+  def pocket_gap_score(my_cards)
+    gap = pocket_gap my_cards
+    return -5 if gap >= 4
+    [0, -1, -2, -4][gap]
+  end
+
   def card_score(card)
     values = { 'J' => 6, 'Q' => 7, 'K' => 8, 'A' => 10 }
     if values.key? card['rank']
       return values[card['rank']]
     end
     card['rank']/2
+  end
+
+  def card_numeric_value(card)
+    values = { 'J' => 11, 'Q' => 12, 'K' => 13, 'A' => 14 }
+    if values.key? card['rank']
+      return values[card['rank']]
+    end
+    card['rank']
   end
 end

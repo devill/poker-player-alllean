@@ -38,7 +38,7 @@ class Player
   end
 
   def card_score(card)
-    values = { 'J': 6, 'Q':7, 'K':8, 'A':10 }
+    values = { 'J' => 6, 'Q' => 7, 'K' => 8, 'A' => 10 }
     if values.key? card['rank']
       return values[card['rank']]
     end

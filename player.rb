@@ -25,14 +25,16 @@ class Player
     my_cards = me['hole_cards']
 
     active_players = game_state['players'].map { |player| player['status'] == 'active' ? 1 : 0 }.inject(0){|sum,x| sum + x }
-    cutoff = active_players > 2 ? 10 : 7
+    cutoff = active_players > 2 ? 9 : 6
 
     position = [2,3,1][game_state['dealer']]
-    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards'])
+    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards']) * 3
 
-    raise = game_state['current_buy_in'].to_i - me['bet'].to_i + game_state['minimum_raise'].to_i
+    call = game_state['current_buy_in'].to_i - me['bet'].to_i
+    raise = call + game_state['minimum_raise'].to_i
 
-    bet = (chen_score > cutoff - position) ? raise : 0
+    bet = (10 * call < me['stack'] and chen_score + 2 > cutoff - position) ? call : 0
+    bet = (chen_score > cutoff - position) ? raise : bet
 
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 

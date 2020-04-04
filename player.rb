@@ -3,10 +3,11 @@ require 'securerandom'
 
 class Player
 
-  VERSION = "Wait for it..."
+  VERSION = "Post flops are cool"
 
   def bet_request(game_state)
-    safe_bet(game_state)
+    bet = safe_bet(game_state).to_i
+    bet < 0 ? 0 : bet
   rescue StandardError => e
     STDERR.puts "[ERROR] " + e.message
     STDERR.puts e.backtrace
@@ -27,12 +28,21 @@ class Player
     cutoff = active_players > 2 ? 10 : 7
 
     position = [2,3,1][game_state['dealer']]
-    chen_score = chen_score my_cards
-    bet = (chen_score > cutoff - position) ? 10000 : 0
+    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards'])
+
+    raise = game_state['current_buy_in'].to_i - me['bet'].to_i + game_state['minimum_raise'].to_i
+
+    bet = (chen_score > cutoff - position) ? raise : 0
 
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 
     bet
+  end
+
+  def ivett_score(my_cards, community_cards)
+    my_cards.map do |my_card|
+      community_cards.map { |community_card| my_card['rank'] == community_card['rank'] ? 1 : 0 }.inject(0){|sum,x| sum + x }
+    end.inject(0){|sum,x| sum + x }
   end
 
   def chen_score(my_cards)

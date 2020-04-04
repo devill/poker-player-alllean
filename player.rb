@@ -32,7 +32,7 @@ class Player
     score *= 2 if pocket_pair? my_cards
     score += 2 if suited_pocket? my_cards
     score += pocket_gap_score my_cards
-    score
+    score.ceil
   end
 
   def pocket_pair?(my_cards)

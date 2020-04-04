@@ -8,8 +8,8 @@ class Player
   def bet_request(game_state)
     safe_bet(game_state)
   rescue StandardError => e
-    puts e.message
-    puts e.backtrace
+    STDERR.puts e.message
+    STDERR.puts e.backtrace
     0
   end
 
@@ -27,7 +27,7 @@ class Player
     chen_score = chen_score my_cards
     bet = (chen_score > 7 - position) ? 10000 : 0
 
-    puts chen_score, bet, my_cards
+    STDERR.puts  my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 
     bet
   end

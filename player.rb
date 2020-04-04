@@ -25,20 +25,32 @@ class Player
     my_cards = me['hole_cards']
 
     active_players = game_state['players'].map { |player| player['status'] == 'active' ? 1 : 0 }.inject(0){|sum,x| sum + x }
-    cutoff = active_players > 2 ? 9 : 6
+    cutoff = active_players > 2 ? 10 : 7
 
     position = [2,3,1][game_state['dealer']]
-    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards']) * 3
+    chen_score = chen_score(my_cards) + ivett_score(my_cards, game_state['community_cards']) * 3 + flush_score(my_cards, game_state['community_cards'])
 
     call = game_state['current_buy_in'].to_i - me['bet'].to_i
     min_raise = game_state['minimum_raise'].to_i
 
-    bet = (10 * call < me['stack'] and chen_score + 2 > cutoff - position) ? call : 0
+    bet = (10 * call < me['stack'] and chen_score + 1 > cutoff - position) ? call : 0
     bet = (chen_score > cutoff - position) ? call + min_raise * (chen_score - (cutoff - position)) : bet
 
     STDERR.puts  "[MAKE BET] " + my_cards.map { |card| "#{card['rank']} of #{card['suit']}" }.join(' and ') + " > #{chen_score} >  #{bet}"
 
     bet
+  end
+
+  def flush_score(my_cards, community_cards)
+    return 0 unless suited_pocket?(my_cards)
+    suit = my_cards.first['suit']
+
+    suited_community = community_cards.map { |community_card| suit == community_card['suit'] ? 1 : 0 }.inject(0){|sum,x| sum + x }
+    community_count = community_cards.length
+
+    return 10 if suited_community > 3
+    return 3 if suited_community > 2 and community_count < 4
+    0
   end
 
   def ivett_score(my_cards, community_cards)

@@ -50,6 +50,7 @@ class Player
 
     return 10 if suited_community > 3
     return 3 if suited_community > 2 and community_count < 4
+    return 1 if suited_community > 2 and community_count < 5
     0
   end
 
